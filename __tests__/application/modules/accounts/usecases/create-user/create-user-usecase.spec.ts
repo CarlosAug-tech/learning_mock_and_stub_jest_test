@@ -111,6 +111,22 @@ describe('Create User UseCase', () => {
     await expect(sut.execute(user)).rejects.toThrow();
   });
 
+  it('should not be able to create a new User if Password does not match with ConfirmPassword', async () => {
+    const { sut, usersRepositoryInMemoryStub } = makeSut();
+    jest
+      .spyOn(usersRepositoryInMemoryStub, 'findByEmail')
+      .mockReturnValueOnce(undefined);
+
+    const user = {
+      name: 'valid_name',
+      email: 'valid_email@mail.com',
+      password: 'valid_password',
+      confirmPassword: 'invalid_password',
+    };
+
+    await expect(sut.execute(user)).rejects.toThrow();
+  });
+
   it('should be able to create a new User', async () => {
     const { sut, usersRepositoryInMemoryStub } = makeSut();
     jest
