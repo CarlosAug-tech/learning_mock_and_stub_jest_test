@@ -1,3 +1,4 @@
+import { IUser } from '@domain/entities/user';
 import {
   ICreateUserRequestDTO,
   ICreateUserResponseDTO,
@@ -5,6 +6,7 @@ import {
 
 interface IUsersRepository {
   create(data: ICreateUserRequestDTO): Promise<ICreateUserResponseDTO>;
+  findByEmail(email: string): Promise<IUser>;
 }
 
 export { IUsersRepository };

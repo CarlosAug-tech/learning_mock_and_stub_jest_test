@@ -17,6 +17,12 @@ class CreateUserUseCase extends UseCase {
   async perform(data: ICreateUserRequest): Promise<ICreateUserResponseDTO> {
     const { name, email, password, confirmPassword } = data;
 
+    const userExists = await this.usersRepository.findByEmail(email);
+
+    if (userExists) {
+      throw new Error('User already exists');
+    }
+
     const user = await this.usersRepository.create({
       name,
       email,

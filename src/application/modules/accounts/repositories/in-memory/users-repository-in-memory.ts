@@ -1,3 +1,4 @@
+import { IUser } from '@domain/entities/user';
 import { User } from '@infra/database/typeorm/entities/user';
 import {
   ICreateUserRequestDTO,
@@ -27,6 +28,10 @@ class UsersRepositoryInMemory implements IUsersRepository {
     const { id, created_at } = user;
 
     return { id, name, email, created_at };
+  }
+
+  async findByEmail(email: string): Promise<IUser> {
+    return this.user.find(user => user.email === email);
   }
 }
 
