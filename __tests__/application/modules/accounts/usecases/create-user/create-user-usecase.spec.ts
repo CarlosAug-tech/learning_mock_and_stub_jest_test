@@ -4,6 +4,7 @@ import {
 } from '@application/modules/accounts/dtos/create-user-dto';
 import { IUsersRepository } from '@application/modules/accounts/repositories/contracts/users-repository';
 import { CreateUserUseCase } from '@application/modules/accounts/usecases/create-user/create-user-usecase';
+import { IUser } from '@domain/entities/user';
 
 const makeUsersRepositoryInMemory = (): IUsersRepository => {
   class UsersRepositoryInMemoryStub implements IUsersRepository {
@@ -12,6 +13,18 @@ const makeUsersRepositoryInMemory = (): IUsersRepository => {
         id: 'valid_id',
         name: 'valid_name',
         email: 'valid_email@mail.com',
+        created_at: new Date(),
+      };
+
+      return new Promise(resolve => resolve(userFake));
+    }
+
+    async findByEmail(email: string): Promise<IUser> {
+      const userFake = {
+        id: 'valid_id',
+        name: 'valid_name',
+        email: 'valid_email_exists@mail.com',
+        password: 'valid_password',
         created_at: new Date(),
       };
 
@@ -85,8 +98,24 @@ describe('Create User UseCase', () => {
     await expect(sut.execute(user)).rejects.toThrow();
   });
 
-  it('should be able to create a new User', async () => {
+  it('should not be able to create a new User if Email already exists', async () => {
     const { sut } = makeSut();
+
+    const user = {
+      name: 'valid_name',
+      email: 'valid_email_exists@mail.com',
+      password: 'valid_password',
+      confirmPassword: 'valid_password',
+    };
+
+    await expect(sut.execute(user)).rejects.toThrow();
+  });
+
+  it('should be able to create a new User', async () => {
+    const { sut, usersRepositoryInMemoryStub } = makeSut();
+    jest
+      .spyOn(usersRepositoryInMemoryStub, 'findByEmail')
+      .mockReturnValueOnce(undefined);
     const user = {
       name: 'valid_name',
       email: 'valid_email@mail.com',
