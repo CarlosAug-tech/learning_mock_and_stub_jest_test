@@ -12,7 +12,7 @@ abstract class UseCase {
     return await this.perform(data);
   }
 
-  protected validate(fields: string[], data: any) {
+  private validate(fields: string[], data: any) {
     for (const field of fields) {
       if (!data[field]) {
         throw new Error(`This field ${field} is required!`);
