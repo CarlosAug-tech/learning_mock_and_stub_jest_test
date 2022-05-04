@@ -14,7 +14,7 @@ class CreateUserUseCase extends UseCase {
     super();
   }
 
-  async execute(data: ICreateUserRequest): Promise<ICreateUserResponseDTO> {
+  async perform(data: ICreateUserRequest): Promise<ICreateUserResponseDTO> {
     const { name, email, password, confirmPassword } = data;
 
     const user = await this.usersRepository.create({
