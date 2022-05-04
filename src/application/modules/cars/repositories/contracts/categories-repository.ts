@@ -1,3 +1,4 @@
+import { ICategory } from '@domain/entities/category';
 import {
   ICreateCategoryRequestDTO,
   ICreateCategoryResponseDTO,
@@ -5,6 +6,7 @@ import {
 
 interface ICategoriesRepository {
   create(data: ICreateCategoryRequestDTO): Promise<ICreateCategoryResponseDTO>;
+  findByName(name: string): Promise<ICategory>;
 }
 
 export { ICategoriesRepository };

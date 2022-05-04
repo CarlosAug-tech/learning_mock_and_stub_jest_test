@@ -15,6 +15,12 @@ class CreateCategoryUseCase extends UseCase {
   ): Promise<ICreateCategoryResponseDTO> {
     const { name } = data;
 
+    const categoryExists = this.categoriesRepository.findByName(name);
+
+    if (categoryExists) {
+      throw new Error('Category already exists');
+    }
+
     const category = this.categoriesRepository.create({ name });
 
     return category;
