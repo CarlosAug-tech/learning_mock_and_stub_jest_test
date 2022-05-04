@@ -1,11 +1,11 @@
 import { UseCase } from '@application/contracts/usecase';
-import { ICreateUserResponseDTO } from '../../dtos/create-user-dto';
+import {
+  ICreateUserRequestDTO,
+  ICreateUserResponseDTO,
+} from '../../dtos/create-user-dto';
 import { IUsersRepository } from '../../repositories/contracts/users-repository';
 
-interface ICreateUserRequest {
-  name: string;
-  email: string;
-  password: string;
+interface ICreateUserRequest extends ICreateUserRequestDTO {
   confirmPassword: string;
 }
 
