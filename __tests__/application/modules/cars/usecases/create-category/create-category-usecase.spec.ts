@@ -39,6 +39,16 @@ const makeSut = (): ISutTypes => {
 };
 
 describe('Create Category UseCase', () => {
+  it('should not be able to create a new Category if field Name is not provided', async () => {
+    const { sut } = makeSut();
+
+    const category = {
+      name: '',
+    };
+
+    await expect(sut.execute(category)).rejects.toThrow();
+  });
+
   it('should be able to create a new Category', async () => {
     const { sut } = makeSut();
 
