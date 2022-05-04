@@ -4,6 +4,7 @@ import {
 } from '@application/modules/cars/dtos/create-category-dtos';
 import { ICategoriesRepository } from '@application/modules/cars/repositories/contracts/categories-repository';
 import { CreateCategoryUseCase } from '@application/modules/cars/usecases/create-category/create-category-usecase';
+import { ICategory } from '@domain/entities/category';
 
 const makeCategoriesRepositoryStub = (): ICategoriesRepository => {
   class CategoriesRepositoryStub implements ICategoriesRepository {
@@ -13,6 +14,16 @@ const makeCategoriesRepositoryStub = (): ICategoriesRepository => {
       const categoryFake = {
         id: 'valid_id',
         name: 'valid_category',
+        created_at: new Date(),
+      };
+
+      return new Promise(resolve => resolve(categoryFake));
+    }
+
+    findByName(name: string): Promise<ICategory> {
+      const categoryFake = {
+        id: 'valid_id',
+        name: 'valid_category_exists',
         created_at: new Date(),
       };
 
@@ -49,8 +60,21 @@ describe('Create Category UseCase', () => {
     await expect(sut.execute(category)).rejects.toThrow();
   });
 
-  it('should be able to create a new Category', async () => {
+  it('should not be able to create a new Category if already a category with same Name', async () => {
     const { sut } = makeSut();
+
+    const category = {
+      name: 'valid_category_exists',
+    };
+
+    await expect(sut.execute(category)).rejects.toThrow();
+  });
+
+  it('should be able to create a new Category', async () => {
+    const { sut, categoriesRepositoryStub } = makeSut();
+    jest
+      .spyOn(categoriesRepositoryStub, 'findByName')
+      .mockReturnValueOnce(undefined);
 
     const category = {
       name: 'valid_category',
