@@ -30,6 +30,7 @@
     "no-restricted-syntax": "off",
     "consistent-return": "off",
     "no-promise-executor-return": "off",
-    "no-return-await": "off"
+    "no-return-await": "off",
+    "max-classes-per-file": "off"
   }
 }
