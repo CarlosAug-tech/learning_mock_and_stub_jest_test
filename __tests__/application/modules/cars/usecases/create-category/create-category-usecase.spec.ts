@@ -29,6 +29,10 @@ const makeCategoriesRepositoryStub = (): ICategoriesRepository => {
 
       return new Promise(resolve => resolve(categoryFake));
     }
+
+    findById(id: string): Promise<ICategory> {
+      throw new Error('Method not implemented.');
+    }
   }
 
   return new CategoriesRepositoryStub();
