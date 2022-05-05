@@ -37,6 +37,58 @@ const makeSut = (): ISutTypes => {
 };
 
 describe('Create Car UseCase', () => {
+  it('should not be able to create a new Car if Name field is not provided', async () => {
+    const { sut } = makeSut();
+
+    const car = {
+      name: '',
+      description: 'any_description',
+      brand: 'any_brand',
+      category_id: 'any_category_id',
+    };
+
+    await expect(sut.execute(car)).rejects.toThrow();
+  });
+
+  it('should not be able to create a new Car if Description field is not provided', async () => {
+    const { sut } = makeSut();
+
+    const car = {
+      name: 'any_name',
+      description: '',
+      brand: 'any_brand',
+      category_id: 'any_category_id',
+    };
+
+    await expect(sut.execute(car)).rejects.toThrow();
+  });
+
+  it('should not be able to create a new Car if Brand field is not provided', async () => {
+    const { sut } = makeSut();
+
+    const car = {
+      name: 'any_name',
+      description: 'any_description',
+      brand: '',
+      category_id: 'any_category_id',
+    };
+
+    await expect(sut.execute(car)).rejects.toThrow();
+  });
+
+  it('should not be able to create a new Car if Category_id field is not provided', async () => {
+    const { sut } = makeSut();
+
+    const car = {
+      name: 'any_name',
+      description: 'any_description',
+      brand: 'any_brand',
+      category_id: '',
+    };
+
+    await expect(sut.execute(car)).rejects.toThrow();
+  });
+
   it('should able to create a new Car', async () => {
     const { sut } = makeSut();
 
