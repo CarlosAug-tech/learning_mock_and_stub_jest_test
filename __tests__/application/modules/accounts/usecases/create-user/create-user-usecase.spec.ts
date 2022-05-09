@@ -5,6 +5,10 @@ import {
 import { IUsersRepository } from '@application/modules/accounts/repositories/contracts/users-repository';
 import { CreateUserUseCase } from '@application/modules/accounts/usecases/create-user/create-user-usecase';
 import { IUser } from '@domain/entities/user';
+import {
+  IMailProvider,
+  IMailProviderResponse,
+} from '@infra/container/providers/MailProvider/contracts/mail-provider';
 
 const makeUsersRepositoryInMemory = (): IUsersRepository => {
   class UsersRepositoryInMemoryStub implements IUsersRepository {
@@ -35,17 +39,44 @@ const makeUsersRepositoryInMemory = (): IUsersRepository => {
   return new UsersRepositoryInMemoryStub();
 };
 
+const makeEtherealMailProviderStub = (): IMailProvider => {
+  class EtherealMailProviderStub implements IMailProvider {
+    async sendMail(
+      to: string,
+      subject: string,
+      variables: any,
+      path: string,
+    ): Promise<IMailProviderResponse> {
+      const mailFake = {
+        to: 'any_email@mail.com',
+        subject: 'any_subject',
+        from: 'user_test_mock@noreply.com',
+      };
+
+      return new Promise(resolve => resolve(mailFake));
+    }
+  }
+
+  return new EtherealMailProviderStub();
+};
+
 interface ISutTypes {
   sut: CreateUserUseCase;
   usersRepositoryInMemoryStub: IUsersRepository;
+  etherealMailProviderStub: IMailProvider;
 }
 
 const makeSut = (): ISutTypes => {
   const usersRepositoryInMemoryStub = makeUsersRepositoryInMemory();
-  const sut = new CreateUserUseCase(usersRepositoryInMemoryStub);
+  const etherealMailProviderStub = makeEtherealMailProviderStub();
+  const sut = new CreateUserUseCase(
+    usersRepositoryInMemoryStub,
+    etherealMailProviderStub,
+  );
   return {
     sut,
     usersRepositoryInMemoryStub,
+    etherealMailProviderStub,
   };
 };
 
