@@ -1,4 +1,5 @@
 import { UseCase } from '@application/contracts/usecase';
+import { IMailProvider } from '@infra/container/providers/MailProvider/contracts/mail-provider';
 import {
   ICreateUserRequestDTO,
   ICreateUserResponseDTO,
@@ -10,7 +11,10 @@ interface ICreateUserRequest extends ICreateUserRequestDTO {
 }
 
 class CreateUserUseCase extends UseCase {
-  constructor(private usersRepository: IUsersRepository) {
+  constructor(
+    private usersRepository: IUsersRepository,
+    private etherealProvider: IMailProvider,
+  ) {
     super();
   }
 
@@ -32,6 +36,13 @@ class CreateUserUseCase extends UseCase {
       email,
       password,
     });
+
+    await this.etherealProvider.sendMail(
+      email,
+      'Criação da conta com sucesso!',
+      { name, email },
+      '',
+    );
 
     return user;
   }
