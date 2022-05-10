@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+import { inject, injectable } from 'tsyringe';
 import { UseCase } from '@application/contracts/usecase';
 import { IMailProvider } from '@infra/container/providers/MailProvider/contracts/mail-provider';
 import {
@@ -10,10 +12,13 @@ interface ICreateUserRequest extends ICreateUserRequestDTO {
   confirmPassword: string;
 }
 
+@injectable()
 class CreateUserUseCase extends UseCase {
   constructor(
+    @inject('UsersRepository')
     private usersRepository: IUsersRepository,
-    private etherealProvider: IMailProvider,
+    @inject('EtherealMailProvider')
+    private etherealMailProvider: IMailProvider,
   ) {
     super();
   }
@@ -37,7 +42,7 @@ class CreateUserUseCase extends UseCase {
       password,
     });
 
-    await this.etherealProvider.sendMail(
+    await this.etherealMailProvider.sendMail(
       email,
       'Criação da conta com sucesso!',
       { name, email },

@@ -19,7 +19,7 @@ class EtherealMailProvider implements IMailProvider {
 
   constructor(options?: IMailProviderRequest) {
     const transporter = nodemailer.createTransport({
-      host: options ? options.host : authMail.host,
+      host: options ? options.host : 'smtp.mailtrap.io',
       port: options ? options.port : authMail.port,
       auth: {
         user: options ? options.auth.user : authMail.auth.user,
