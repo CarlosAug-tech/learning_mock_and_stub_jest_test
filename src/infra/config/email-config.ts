@@ -1,5 +1,5 @@
 export default {
-  host: process.env.EMAI_HOST,
+  host: process.env.EMAIL_HOST,
   port: Number(process.env.EMAIL_PORT),
   auth: {
     user: process.env.EMAIL_AUTH_USER,
