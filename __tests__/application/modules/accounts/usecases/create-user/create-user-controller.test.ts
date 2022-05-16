@@ -3,32 +3,20 @@ import { Connection } from 'typeorm';
 
 import createConnection from '@infra/database/typeorm';
 import { app } from '@infra/http/app';
-import { IMailProvider } from '@infra/container/providers/MailProvider/contracts/mail-provider';
-import { EtherealMailProvider } from '@infra/container/providers/MailProvider/implementations/ethereal-mail-provider';
 
 let connection: Connection;
+const sendMailMock = jest.fn((mailOptions, callback) => callback());
 
-jest.mock(
-  '@infra/container/providers/MailProvider/implementations/ethereal-mail-provider',
-);
-
-const mailOptionsFake = {
-  host: 'any_host',
-  port: 2525,
-  auth: {
-    user: 'any_user',
-    pass: 'any_pass',
-  },
-};
-
-let teste: IMailProvider;
+jest.mock('nodemailer', () => ({
+  createTransport: jest.fn().mockReturnValue({
+    sendMail: () => sendMailMock,
+  }),
+}));
 
 describe('Create User Controller', () => {
   beforeAll(async () => {
     connection = await createConnection();
     await connection.runMigrations();
-
-    teste = new EtherealMailProvider(mailOptionsFake);
   });
 
   afterAll(async () => {
