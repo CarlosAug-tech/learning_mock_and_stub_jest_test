@@ -5,6 +5,7 @@ import {
 import { IUsersRepository } from '@application/modules/accounts/repositories/contracts/users-repository';
 import { CreateUserUseCase } from '@application/modules/accounts/usecases/create-user/create-user-usecase';
 import { IUser } from '@domain/entities/user';
+import { IEncryptProvider } from '@infra/container/providers/EncryptProvider/contracts/encrypt-provider';
 import {
   IMailProvider,
   IMailProviderResponse,
@@ -60,23 +61,36 @@ const makeEtherealMailProviderStub = (): IMailProvider => {
   return new EtherealMailProviderStub();
 };
 
+const makeBcryptProviderStub = (): IEncryptProvider => {
+  class BcryptProviderStub implements IEncryptProvider {
+    hash(password: string, salt: number): Promise<string> {
+      return new Promise(resolve => resolve('valid_passwordn_hashed'));
+    }
+  }
+  return new BcryptProviderStub();
+};
+
 interface ISutTypes {
   sut: CreateUserUseCase;
   usersRepositoryInMemoryStub: IUsersRepository;
   etherealMailProviderStub: IMailProvider;
+  bcryptProviderStub: IEncryptProvider;
 }
 
 const makeSut = (): ISutTypes => {
   const usersRepositoryInMemoryStub = makeUsersRepositoryInMemory();
   const etherealMailProviderStub = makeEtherealMailProviderStub();
+  const bcryptProviderStub = makeBcryptProviderStub();
   const sut = new CreateUserUseCase(
     usersRepositoryInMemoryStub,
     etherealMailProviderStub,
+    bcryptProviderStub,
   );
   return {
     sut,
     usersRepositoryInMemoryStub,
     etherealMailProviderStub,
+    bcryptProviderStub,
   };
 };
 
