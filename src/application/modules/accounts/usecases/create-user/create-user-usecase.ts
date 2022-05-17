@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { inject, injectable } from 'tsyringe';
 import { UseCase } from '@application/contracts/usecase';
 import { IMailProvider } from '@infra/container/providers/MailProvider/contracts/mail-provider';
+import { IEncryptProvider } from '@infra/container/providers/EncryptProvider/contracts/encrypt-provider';
 import {
   ICreateUserRequestDTO,
   ICreateUserResponseDTO,
@@ -19,12 +20,15 @@ class CreateUserUseCase extends UseCase {
     private usersRepository: IUsersRepository,
     @inject('EtherealMailProvider')
     private etherealMailProvider: IMailProvider,
+    @inject('BcryptProvider')
+    private bcryptProvider: IEncryptProvider,
   ) {
     super();
   }
 
   async perform(data: ICreateUserRequest): Promise<ICreateUserResponseDTO> {
     const { name, email, password, confirmPassword } = data;
+    const saltHash = 12;
 
     const userExists = await this.usersRepository.findByEmail(email);
 
@@ -36,10 +40,12 @@ class CreateUserUseCase extends UseCase {
       throw new Error('Password does not match with ConfirmPassword');
     }
 
+    const passwordHash = await this.bcryptProvider.hash(password, saltHash);
+
     const user = await this.usersRepository.create({
       name,
       email,
-      password,
+      password: passwordHash,
     });
 
     await this.etherealMailProvider.sendMail(
