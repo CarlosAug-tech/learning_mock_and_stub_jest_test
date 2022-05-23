@@ -1,6 +1,7 @@
-import { UseCase } from '@application/contracts/usecase';
-import { IEncryptProvider } from '@infra/container/providers/EncryptProvider/contracts/encrypt-provider';
 import { sign } from 'jsonwebtoken';
+import { UseCase } from '@application/contracts/usecase';
+import authConfig from '@infra/config/auth-config';
+import { IEncryptProvider } from '@infra/container/providers/EncryptProvider/contracts/encrypt-provider';
 import {
   IAuthenticationUserRequestDTO,
   IAuthenticationUserResponseDTO,
@@ -37,8 +38,9 @@ class AuthenticationUserUseCase extends UseCase {
 
     const { id } = user;
 
-    const token = sign({}, '167014c755dc5ad2247e86cbf74ae1c3', {
+    const token = sign({}, authConfig.token_secret, {
       subject: id,
+      expiresIn: authConfig.token_expires_in,
     });
 
     return {
