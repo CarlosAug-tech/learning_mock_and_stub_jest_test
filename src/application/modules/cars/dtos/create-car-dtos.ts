@@ -3,6 +3,7 @@ interface ICreateCarRequestDTO {
   description: string;
   brand: string;
   category_id: string;
+  user_id: string;
 }
 
 interface ICreateCarResponseDTO {
@@ -11,6 +12,7 @@ interface ICreateCarResponseDTO {
   description: string;
   brand: string;
   category_id: string;
+  user_id: string;
   created_at: Date;
 }
 

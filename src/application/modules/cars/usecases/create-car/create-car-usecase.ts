@@ -15,7 +15,7 @@ class CreateCarUseCase extends UseCase {
   }
 
   async perform(data: ICreateCarRequestDTO): Promise<ICreateCarResponseDTO> {
-    const { name, description, brand, category_id } = data;
+    const { name, description, brand, user_id, category_id } = data;
 
     const categoryExists = this.categoriesRepository.findById(category_id);
 
@@ -28,6 +28,7 @@ class CreateCarUseCase extends UseCase {
       description,
       brand,
       category_id,
+      user_id,
     });
 
     return car;

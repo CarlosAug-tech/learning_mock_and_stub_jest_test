@@ -20,6 +20,7 @@ const makeCarsRepositoryStub = (): ICarsRepository => {
         description: 'any_description',
         brand: 'any_brand',
         category_id: 'any_category_id',
+        user_id: 'any_user_id',
         created_at: new Date(),
       };
 
@@ -82,6 +83,7 @@ describe('Create Car UseCase', () => {
       description: 'any_description',
       brand: 'any_brand',
       category_id: 'any_category_id',
+      user_id: 'any_user_id',
     };
 
     await expect(sut.execute(car)).rejects.toThrow();
@@ -95,6 +97,7 @@ describe('Create Car UseCase', () => {
       description: '',
       brand: 'any_brand',
       category_id: 'any_category_id',
+      user_id: 'any_user_id',
     };
 
     await expect(sut.execute(car)).rejects.toThrow();
@@ -108,6 +111,7 @@ describe('Create Car UseCase', () => {
       description: 'any_description',
       brand: '',
       category_id: 'any_category_id',
+      user_id: 'any_user_id',
     };
 
     await expect(sut.execute(car)).rejects.toThrow();
@@ -121,6 +125,21 @@ describe('Create Car UseCase', () => {
       description: 'any_description',
       brand: 'any_brand',
       category_id: '',
+      user_id: 'any_user_id',
+    };
+
+    await expect(sut.execute(car)).rejects.toThrow();
+  });
+
+  it('should not be able to create a new Car if User_id field is not provided', async () => {
+    const { sut } = makeSut();
+
+    const car = {
+      name: 'any_name',
+      description: 'any_description',
+      brand: 'any_brand',
+      category_id: 'any_category_id',
+      user_id: '',
     };
 
     await expect(sut.execute(car)).rejects.toThrow();
@@ -137,6 +156,7 @@ describe('Create Car UseCase', () => {
       description: 'any_description',
       brand: 'any_brand',
       category_id: 'invalid_category',
+      user_id: 'any_user_id',
     };
 
     await expect(sut.execute(car)).rejects.toThrow();
@@ -150,6 +170,7 @@ describe('Create Car UseCase', () => {
       description: 'any_description',
       brand: 'any_brand',
       category_id: 'any_category_id',
+      user_id: 'any_user_id',
     };
 
     const newCar = await sut.execute(car);
@@ -161,6 +182,7 @@ describe('Create Car UseCase', () => {
       description: 'any_description',
       brand: 'any_brand',
       category_id: 'any_category_id',
+      user_id: 'any_user_id',
       created_at: newCar.created_at,
     });
   });
