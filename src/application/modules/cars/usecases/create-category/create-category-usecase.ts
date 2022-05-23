@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+import { inject, injectable } from 'tsyringe';
 import { UseCase } from '@application/contracts/usecase';
 import {
   ICreateCategoryRequestDTO,
@@ -5,8 +7,12 @@ import {
 } from '../../dtos/create-category-dtos';
 import { ICategoriesRepository } from '../../repositories/contracts/categories-repository';
 
+@injectable()
 class CreateCategoryUseCase extends UseCase {
-  constructor(private categoriesRepository: ICategoriesRepository) {
+  constructor(
+    @inject('CategoriesRepository')
+    private categoriesRepository: ICategoriesRepository,
+  ) {
     super();
   }
 
@@ -15,13 +21,13 @@ class CreateCategoryUseCase extends UseCase {
   ): Promise<ICreateCategoryResponseDTO> {
     const { name } = data;
 
-    const categoryExists = this.categoriesRepository.findByName(name);
+    const categoryExists = await this.categoriesRepository.findByName(name);
 
     if (categoryExists) {
       throw new Error('Category already exists');
     }
 
-    const category = this.categoriesRepository.create({ name });
+    const category = await this.categoriesRepository.create({ name });
 
     return category;
   }

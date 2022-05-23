@@ -1,10 +1,9 @@
+import authConfig from '@infra/config/auth-config';
 import { NextFunction, Request, Response } from 'express';
 import { verify } from 'jsonwebtoken';
 
 interface IPayload {
-  subject: {
-    id: string;
-  };
+  sub: string;
 }
 
 export default async (
@@ -21,12 +20,10 @@ export default async (
   const [, token] = authHeader.split(' ');
 
   try {
-    const {
-      subject: { id },
-    } = verify(token, '') as IPayload;
+    const { sub: user_id } = verify(token, authConfig.token_secret) as IPayload;
 
     request.user = {
-      id,
+      id: user_id,
     };
 
     next();
