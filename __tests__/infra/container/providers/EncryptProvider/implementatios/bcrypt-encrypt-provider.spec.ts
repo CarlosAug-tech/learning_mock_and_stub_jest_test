@@ -19,6 +19,16 @@ const makeSut = (): ISutTypes => {
 };
 
 describe('Bcrypt Provider', () => {
+  it('should be able to compare encrypt passwords', async () => {
+    const { sut } = makeSut();
+
+    const passwordHash = await bcrypt.hash('any_password', hashSalt);
+
+    const isPasswordMatch = await sut.compare('any_password', passwordHash);
+
+    expect(isPasswordMatch).toBe(true);
+  });
+
   it('should be able to encrypt password', async () => {
     const { sut } = makeSut();
 
