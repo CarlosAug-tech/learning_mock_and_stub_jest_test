@@ -20,6 +20,7 @@ describe('Create User Controller', () => {
   });
 
   afterAll(async () => {
+    jest.clearAllMocks();
     await connection.dropDatabase();
     await connection.close();
   });
