@@ -2,15 +2,19 @@ import { sign } from 'jsonwebtoken';
 import { UseCase } from '@application/contracts/usecase';
 import authConfig from '@infra/config/auth-config';
 import { IEncryptProvider } from '@infra/container/providers/EncryptProvider/contracts/encrypt-provider';
+import { inject, injectable } from 'tsyringe';
 import {
   IAuthenticationUserRequestDTO,
   IAuthenticationUserResponseDTO,
 } from '../../dtos/authentication-user-dto';
 import { IUsersRepository } from '../../repositories/contracts/users-repository';
 
+@injectable()
 class AuthenticationUserUseCase extends UseCase {
   constructor(
+    @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+    @inject('BcryptProvider')
     private bcryptProvider: IEncryptProvider,
   ) {
     super();

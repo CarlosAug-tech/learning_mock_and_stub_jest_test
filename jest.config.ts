@@ -26,6 +26,7 @@ export default {
     '!<rootDir>/src/**/dtos/**',
     '!<rootDir>/src/infra/http/server.ts',
     '!<rootDir>/src/infra/database/typeorm/migrations/*.ts',
+    '!<rootDir>/src/@types/**',
   ],
 
   // The directory where Jest should output its coverage files
